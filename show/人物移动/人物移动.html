@@ -1,0 +1,76 @@
+<body onkeydown="opt()">
+<img border="0" style="position:absolute;left:0px;top:0px;" id="ren" src="images/ren_q_1.gif">
+
+
+<script>
+	//获取图片名
+	function basename(url){
+		var loc=url.lastIndexOf("/")+1;
+
+		return url.substr(loc);
+	}
+	//创建人图片对象
+	var ren=document.getElementById("ren");
+
+	var fx="l";
+	function changetu(){
+		if(basename(ren.src).charAt(6)=="1"){
+			ren.src="images/ren_"+fx+"_2.gif";
+		}else{
+			ren.src="images/ren_"+fx+"_1.gif";
+		}
+	}
+	var x=0;
+	var y=0;
+	var xs=0;
+	var ys=0;
+	function run(){
+		x+=xs;
+		y+=ys;
+		ren.style.top=y
+		ren.style.left=x;
+	}
+
+
+	setInterval(function(){
+			changetu();
+			run();	
+			},100);
+
+
+	function opt(en){
+		var e=en||window.event;
+		var code=e.keyCode;
+
+		switch(code){
+			//左
+			case 37:
+				fx="l";
+				ys=0;
+				xs=-5;
+				break;
+			//右
+			case 39:
+
+				fx="r";
+				ys=0;
+				xs=5;
+				break;
+			//上
+
+			case 38:
+				fx="h";
+				xs=0;
+				ys=-5;
+				break;
+			//下
+
+			case 40:
+				xs=0;
+				ys=5;
+				fx="q";
+				break;
+		}
+	}
+</script>	
+</body>

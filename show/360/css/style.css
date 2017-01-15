@@ -1,0 +1,77 @@
+/* 样式初始化  */
+*{margin:0; padding:0;}
+img{border:0}
+a{text-decoration:none; color:#333333}
+ul li{list-style:none;}
+body,h1,h2,h3,h4,h5,h6{font:12px/1.5 宋体,微软雅黑;color:#333333;}
+
+/*预定义样式*/
+.w{width:1000px;margin:0 auto;}
+.fl{float:left;}
+.fr{float:right;}
+.clear{clear:both;}
+.mt10{margin-top:10px;}
+.mt20{margin-top:20px;}
+.fontyh{font-family:微软雅黑,宋体;}
+.border{border:1px solid red;}
+
+/* start header */
+#header .topbar{background:url("../images/t01267b1.png") repeat-x; height:40px;}
+#header .topbar .topnar li{float:left;height:40px; line-height:40px;}
+#header .topbar .topnar li a{color:#cfcfcf; font-size:14px; padding:0 12px;}
+#header .topbar .topnar li a:hover {color:#ff9900}
+
+#header .topbar .ucenter li{float:right;height:40px;line-height:40px;}
+#header .topbar .ucenter li a{color:#cfcfcf;  padding:0 5px;}
+
+#header .nav ul{margin-top:15px; }
+#header .nav ul li {float:left;margin-left:3px;}
+#header .nav ul li a{display:block; width:80px; height:45px; line-height:45px; text-align:center;font-size:20px;}
+#header  .nav ul li a:hover {background:#7bb707; color:#fff;}
+#header .nav ul li .active{background:#7bb707; color:#fff;}
+
+/* main start */
+
+#main .subnav{height:45px;background:#7BB707}
+#main .subnav .title_h2{width:120px; height:45px; line-height:45px; font-size:22px; font-weight:bold;background:url(../images/t0165e4c.jpg) no-repeat 0 0 ; color:#fff;padding:0 30px;}
+
+#main .subnav ul li{float:left;}
+#main .subnav ul li a{color:#fff;padding:0 15px; font-size:16px;display:block;height:44px;line-height:44px;}
+#main .subnav ul li a:hover {background:#444;height:50px;}
+#main .subnav ul li .active{background:#444;height:50px;}
+
+#main .phone_tegongji{border-left:1px solid #e1e1e1;border-top:1px solid #e1e1e1; overflow:hidden;zoom:1;}
+#main .phone_tegongji li{float:left;border-right:1px solid #e1e1e1; border-bottom:1px solid #e1e1e1;}
+
+#main .phone_tegongji .share{margin-left:5px;}
+#main .phone_tegongji .share a{
+    display:inline-block;
+	height:45px;width:45px;
+	line-height:45px;
+	color:#888888;
+	font-size:16px;
+	padding:0 5px;
+	text-align:center;
+
+}
+#main .phone_tegongji .share a:hover{ background:#7bb707;color:#fff;}
+
+#main .phone_tegongji .share .love{
+	display:inline-block;
+	height:45px;width:45px;
+	line-height:45px;
+	background:url(../images/t01865ea.png) no-repeat;
+	color:#ff4b4b;
+	font-size:16px;
+	padding-left:30px;
+	
+}
+#main .phone_tegongji .share .love:hover{
+	background:#ff4b4b url(../images/t01865ea.png) no-repeat 0 -45px;
+	color:#fff;
+	cursor:pointer;
+}
+
+#footer{height:62px; background:#efefef;line-height:62px; color:#888888;text-align:center;}
+
+.gotop{ width:50px; height:151px; position:fixed; right:60px; top:250px; border:1px solid #E1E1E1;}

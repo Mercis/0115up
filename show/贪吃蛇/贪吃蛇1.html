@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Index</title>
+        <script src="./jquery-1.7.2.min.js"></script>
+        <style type="text/css">
+            #map table{border-collapse: collapse;border:1px solid lightgray;}
+            #map table td{width:10px;height:10px;}
+            #map table .snake{background:lightgreen;}
+            #map table .food{background:pink;}
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        速度：
+        <select id="speed">
+            <option value="150">慢</option>
+            <option value="100">中</option>
+            <option value="50">快</option>
+        </select>
+        尺寸：
+        <select id="size">
+            <option value="25">小</option>
+            <option value="40">中</option>
+            <option value="50">大</option>
+        </select>
+        <button onclick="start(this)">开始</button>
+    </body>
+    <script>
+        var size = 25;              //地图尺寸
+        var x = 0,y=1;              //用于方向增量
+        var arr = [];               //蛇
+        var timmer;                 //结束游戏
+        var foodpos;
+        var rmlast = true;
+        var speed ;
+        var reset = true;
+
+        //初始化小蛇
+        for(var i=0;i<4;i++){
+            arr[arr.length] = [3,i+2];
+        }
+
+        //打开页面自动加载
+        window.onload = function(){
+            init();
+        }
+
+        //键盘控制
+        document.onkeydown = function(e){
+            switch(e.keyCode){
+                case 37:
+                    if(y != 1){
+                        document.title = '左';
+                        x = 0;
+                        y = -1;
+                    }
+                    break;
+                case 38:
+                    if(x != 1){
+                        document.title = '上';
+                        x = -1;
+                        y = 0;
+                    }
+                    break;
+                case 39:
+                    if(y != -1){
+                        document.title = '右';
+                        x = 0;
+                        y = 1;
+                    }
+                    break;
+                case 40:
+                    if(x != -1){
+                        document.title = '下';
+                        x = 1;
+                        y = 0;
+                    }
+                    break;
+            }
+        }
+
+        //初始化表格
+        function init(){
+            var map = document.getElementById('map');
+            var table = [];
+            table.push('<table>');
+            for(var y=0; y<size;y++){
+                table.push('<tr>');
+                    for(var x=0;x<size;x++){
+                        table.push('<td id="box_'+y+'_'+x+'"></td>');
+                    }
+                table.push('</tr>');
+            }
+            map.innerHTML = table.join("");
+        }
+
+        //画蛇
+        function snake(){
+            //准备一个数组
+            $("td").removeClass('snake');
+            
+            for(var i=0;i<arr.length;i++){
+                $("#box_"+arr[i][0]+"_"+arr[i][1]).addClass('snake');
+            }
+        }
+
+        //移动
+        function move(){
+            timmer = setInterval(function(){
+                //改变数组
+                //移除掉最后一个
+                var row = arr[arr.length-1][0];
+                var col = arr[arr.length-1][1];
+                row = row + x;
+                col = col+ y;
+
+
+                for(var i in arr){
+                    //判断是否吃了自己
+                    if(arr[i][0] == row && arr[i][1] == col){
+                        var mask = true;
+                    }
+
+                    //判断吃屎
+                    if(arr[i][0] == foodpos[0] && arr[i][1] == foodpos[1]){
+                        //如果吃屎了，不删除最后一个
+                        var td = document.getElementById('box_'+foodpos[0]+'_'+foodpos[1]);
+                        td.className = '';
+                        rmlast = false;
+                        food();
+                    }else{
+                        rmlast = true;
+                    }
+                }
+                
+                if(rmlast) arr.shift();
+                
+                if(row >= size || row < 0 || col >= size || col < 0 || mask){
+                    alert('亲！你咋想不开呢？');
+                    clearInterval(timmer);
+                }else{
+                    arr.push([row,col]);
+                    snake();
+                }
+            },speed);
+        }
+
+        //随机产生食物
+        function food(){
+            //个2随机数
+            var x = Math.floor((Math.random()*size));
+            var y = Math.floor((Math.random()*size));
+            for(var i in arr){
+                if(arr[i][0] == x && arr[i][1] == y){
+                    var mask = true;
+                }
+            }
+
+            if(mask){
+                food();
+            }else{
+                foodpos = [x,y];
+                var td = document.getElementById('box_'+x+'_'+y);
+                td.className = 'food';
+            }
+        }
+
+        function start(obj){
+            if(reset){
+                speed = document.getElementById('speed').value;
+                size = document.getElementById('size').value;
+                init();
+                move();
+                food();
+                obj.innerHTML = '重置';
+                reset = false;
+            }else{
+                location.reload();
+            }
+        }
+
+
+
+    </script>
+</html>
+

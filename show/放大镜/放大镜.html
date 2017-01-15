@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>XML DOM</title>
+	<script src='jquery-1.8.3.min.js'></script>	
+	<style>
+		#zoom{
+			width:384px;
+			height:216px;
+			border:1px solid #ccc;
+			position:relative;
+		}
+		
+		#box{
+			width:400px;
+			height:400px;
+			border:1px solid #ccc;
+			overflow:hidden;
+			position:absolute;
+			display:none;
+		}
+		
+		#zoombox{
+			position:absolute;
+			left:10px;
+			top:10px;
+			width:80px;
+			height:80px;
+			background-color:#fff;
+			opacity:0.4;
+			cursor:move;
+			display:none;
+		}
+	</style>
+		
+</head>
+<body>
+	<h1>放大镜--完善</h1>
+	<div id='zoom'>
+		<img src='./images/Meinv001.jpg' width='384' height=216 id='img'>
+		<div id="zoombox"></div>
+	</div>
+	<div id="box">
+		<img src='./images/Meinv001.jpg'>
+	</div>
+</body>
+	<script>
+		$(document).ready(function(){
+
+			$('#zoom').mouseenter(function(){
+
+				$("#zoombox").show();
+				$("#box").show();
+
+				var left = $(this).offset().left;
+				var top = $(this).offset().top;
+
+				$("#box").offset({
+					left:left+$("#zoom").outerWidth()+10,
+					top:top
+				});
+
+				$(this).mousemove(function(en){
+					var x = en.pageX - left;
+					var y = en.pageY - top;
+
+					$("#zoombox").css('left',Math.min(Math.max((x-40),0),304)+'px').css('top', Math.min(Math.max((y-40),0),136)+'px');
+
+					$("#box").scrollLeft((x-40)*5).scrollTop((y-40)*5);
+				});
+			}).mouseleave(function(){
+				$("#zoombox").hide();
+				$("#box").hide();
+			});
+		
+			
+	})
+	</script>
+	
+</html>

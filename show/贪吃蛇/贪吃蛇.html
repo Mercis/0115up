@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Index</title>
+        <script src="./jquery-1.7.2.min.js"></script>
+        <style>
+        	#map table{border-collapse: collapse;border:1px solid lightgray;}
+        	#map table td{width: 10px;height: 10px;}
+        	.snake{background:lightgreen;}
+        	.food{background:pink;}
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <button>开始</button>
+    </body>
+    <script>
+    	var size = 40; 					//地图尺寸
+    	var snake = [];					//小蛇
+    	var x=0,y=1; 					//小蛇初始方向
+    	var speed = 30;				//移动速度
+    	var timmer;						//定时器
+    	var mask = true; 				//用于优化，避免倒车吃自己
+    	var pos;						//食物位置
+
+
+    	//相关事件
+    	$(function(){
+    		init(size);
+    		food();
+    	});
+
+    	$("button").one('click',function(){
+    		start();
+    	});
+
+    	//检测键盘
+    	$(document).keydown(function(e){
+    		switch(e.keyCode){
+    			case 37:
+    				//左
+    				if(y != 1 && mask)
+    				x = 0 , y = -1 ,mask = false;
+    				break;
+    			case 38:
+    				//上
+    				if(x != 1 && mask)
+    				x = -1 , y = 0 ,mask = false;
+    				break;
+    			case 39:
+    				//右  
+    				if(y != -1 && mask)
+    				x = 0 , y = 1 ,mask = false;
+    				break;
+    			case 40:
+    				//下
+    				if(x != -1 && mask)
+    				x = 1 , y = 0 ,mask = false;
+    				break;
+    		}
+    	});
+
+
+    	//初始化
+    	function init(size){
+    		var arr = [];
+    		arr.push('<table>');
+    		for(var i=0;i<size;i++){
+    			arr.push('<tr>');
+    			for(var j=0;j<size;j++){
+    				arr.push('<td id="box_'+i+'_'+j+'"></td>');
+    			}
+    			arr.push('</tr>');
+    		}
+    		arr.push('</table>');
+    		$("#map").html(arr.join(''));
+
+    		//初始化小蛇 为3个长度
+    		for(var k=0;k<3;k++){
+    			snake[snake.length] = [3,k+3];
+    		}
+    		draw();
+    	}
+
+
+    	//给小蛇上色
+    	function draw(){
+    		$("td").removeClass('snake');
+    		for(var i=0;i<snake.length;i++){
+    			$("#box_"+snake[i][0]+"_"+snake[i][1]).addClass('snake');
+    		}
+    	}
+
+    	//小蛇移动
+    	function move(){
+    		timmer = setInterval(function(){
+    			var row = snake[snake.length-1][0] + x;
+    			var col = snake[snake.length-1][1] + y;
+
+    			//判断是否吃屎
+    			if(pos[0] == row && pos[1] == col){
+    				$("#box_"+row+"_"+col).removeClass('food');
+    				food();
+    			}else{
+    				snake.shift();
+    			}
+
+    			//检测小蛇活动
+    			for(var i in snake){
+    				//判断是否吃了自己
+    				if(snake[i][0] == row && snake[i][1] == col) {
+    					var eatself = true;
+    				}
+    			}
+
+    			//判断边界
+    			if(row < 0 || row >= size || col < 0 || col >=size || eatself){
+    				//超出边界
+    				alert('亲!你咋想不开呢？');
+    				clearInterval(timmer);
+    			}else{
+	    			snake.push([row,col]);
+	    			draw();
+    			}
+
+    			//重置标记位
+    			mask = true;
+
+    		},speed);
+    	}
+
+    	//随机产生食物
+    	function food(){
+    		var x = Math.floor(Math.random() * size);
+    		var y = Math.floor(Math.random() * size);
+
+    		//判断食物是否在蛇身上
+    		for(var i in snake){
+    			if(snake[i][0] == x && snake[i][1] == y){
+    				var mask = true;
+    			}
+    		}
+
+    		if(mask){
+    			food();
+    		}else{
+    			pos = [x,y];
+    			$("#box_"+x+"_"+y).addClass('food');
+    		}
+
+    	}
+
+    	//开始
+    	function start(){
+    		//draw();
+    		move();
+    	}
+    	
+    </script>
+</html>
+

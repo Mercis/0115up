@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Index</title>
+        <script src="./jquery-1.7.2.min.js"></script>
+        <style type="text/css">
+            #map table{border-collapse:collapse;border:1px solid lightgray;}
+            #map table td{width:10px;height:10px;}
+            .snake{background:lightgreen;}
+            .food{background:pink;}
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <button>开始</button>
+    </body>
+    <script>
+        var size = 30;                           //地图尺寸
+        var snake = [];                          //小蛇
+        var x=0;y=1;                             //初始运动方向
+        var speed = 30;                          //默认速度
+        var mask = true;                         //优化按键
+        var timmer;                              //定时器
+        var pos;                                 //食物位置
+
+        //加载
+        $(function(){
+            init(size);
+        });
+
+        $('button').click(function(){
+            move();
+            food();
+        });
+
+        //按键改变方向
+        $(document).keydown(function(e){
+            switch(e.keyCode){
+                case 37:
+                    //left
+                    if(y != 1 && mask)
+                    x=0,y=-1,mask=false;
+                    break;
+                case 38:
+                    //up
+                    if(x != 1 && mask)
+                    x=-1,y=0,mask=false;
+                    break;
+                case 39:
+                    //right
+                    if(y != -1 && mask)
+                    x=0,y=1,mask=false;
+                    break;
+                case 40:
+                    //down
+                    if(x != -1 && mask)
+                    x=1,y=0,mask=false;
+                    break;
+            }
+        });
+
+        //构建地图
+        function init(size){
+            var arr = [];
+            arr.push('<table>');
+            for(var i=0;i<size;i++){
+                arr.push('<tr>')
+                for(var j=0;j<size;j++){
+                    arr.push('<td id="box_'+i+'_'+j+'"></td>');
+                }
+                arr.push('</tr>')
+            }
+            arr.push('</table>');
+            //将表格插入到DOM中
+            $('#map').append(arr.join(''));
+
+            //初始化小蛇
+            for(var i=0;i<3;i++){
+                snake.push([3,3+i]);
+            }
+            draw();
+        }
+
+        //给小蛇上色
+        function draw(){
+            $('td').removeClass('snake');
+            for(var i=0;i<snake.length;i++){
+                $('#box_'+snake[i][0]+'_'+snake[i][1]).addClass('snake');
+            }
+        }
+
+        //小蛇移动
+        function move(){
+            timmer = setInterval(function(){
+                //计算出最新的一个位置
+                var row = snake[snake.length-1][0] + x;
+                var col = snake[snake.length-1][1] + y;
+                var head = [row,col];
+
+                //检测小蛇吃屎
+                if(pos[0] == row && pos[1] == col){
+                     $('#box_'+row+'_'+col).removeClass('food');
+                     food();
+                }else{
+                    //弹出最后第一个
+                    snake.shift();
+                }
+
+                //检测小蛇自己
+                for(var i in snake){
+                    if(snake[i][0] == row && snake[i][1] == col) var eatself = true;
+                }
+
+                //判断小蛇位置
+                if(row < 0 || row >= size || col < 0 || col >= size || eatself){
+                    clearInterval(timmer);
+                    alert('亲！你咋想不开呢');
+                }else{
+                    
+                    //弹出最后第一个
+                    //snake.shift();   //判断吃屎的地方操作
+                    //追加一个新的进去
+                    snake.push(head);
+                    //重新绘图
+                    draw();
+                }
+
+                
+
+                //确保小蛇运动后才能再次改变方向
+                mask = true;
+            },speed);
+        }
+
+        //随机产生食物
+        function food(){
+            var x = Math.floor(Math.random() * size);
+            var y = Math.floor(Math.random() * size);
+
+            //判断食物是否在小蛇身上
+            var mask;
+            for(var i in snake){
+                if(snake[i][0] == x && snake[i][1] ==y) mask = true;
+            }
+
+            //如果食物在小蛇身上，重新产生食物
+            if(mask){
+                food();
+            }else{
+                pos = [x,y];
+                $('#box_'+x+'_'+y).addClass('food');
+            }
+        }
+
+        
+
+    </script>
+</html>
+
